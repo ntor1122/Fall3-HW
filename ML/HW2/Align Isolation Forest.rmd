@@ -1,0 +1,58 @@
+---
+title: "Align Time Series Forecast"
+author: "Nish T"
+date: "2023-04-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+rm(list=ls())
+
+```{r}
+pacman::p_load(tidyverse, lubridate, tseries, forecast, ggplot2, seasonalview,aTSA, readxl, imputeTS, isotree)
+```
+
+Isolation Forest to see what groups of account numbers are different (anomaly clustering)
+
+```{r}
+ins <- read.csv(file = "orders2.csv", header = TRUE)
+glimpse(ins)
+```
+
+```{r}
+ins2 <- ins[, -c(1,2,3, 5, 7, 12, 13, 14, 16)]
+glimpse(ins2)
+```
+
+```{r}
+# Isolation Forest to discover cluster of anomalies. WIll need to investigate features further. 
+
+ins_for <- isolation.forest(ins2, ntrees = 250, seed = 12345)
+ins_score <- predict(ins_for, ins2)
+```
+
+```{r}
+hist(ins_score)
+ins2$iso_score <- ins_score
+```
+
+```{r}
+ins3 <- ins[, c(1,2,3, 5, 7, 12, 13, 14, 16)]
+```
+
+```{r}
+final <- cbind(ins3, ins2)
+```
+
+```{r}
+final2 <- final %>%  filter(iso_score>0.7) 
+
+#write.csv(final2, 'final3.csv')
+```
+
+```{r}
+head(final2)
+```
+
