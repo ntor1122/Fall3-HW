@@ -4,6 +4,7 @@ author: "Nish T"
 date: "2023-04-19"
 output: html_document
 ---
+THIS IS A CHANGE
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -53,6 +54,6 @@ final2 <- final %>%  filter(iso_score>0.7)
 ```
 
 ```{r}
-head(final2)
+head(final2, 10)
 ```
 
